@@ -11,7 +11,7 @@
 	let wallet = $state<StarknetKitWallet | null>(null)
 
 	const isBrowserCompatible = () => {
-		return !!(typeof window !== "undefined" && window.ethereum)
+		return !!(typeof window !== "undefined" && (window.ethereum || window.starknet))
 	}
 
 	onMount(() => {
@@ -46,12 +46,11 @@
 	}
 
 	onDestroy(() => {
-		wallet?.off("networkChanged", () => {
+		if (wallet) {
+			wallet.off("networkChanged", () => {})
+			wallet.off("accountsChanged", () => {})
 			wallet = null
-		})
-		wallet?.off("accountsChanged", () => {
-			wallet = null
-		})
+		}
 	})
 
 	const connectToStarknet = async () => {

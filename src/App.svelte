@@ -11,8 +11,8 @@
 			<h4>Network</h4>
 			<br />
 			<code
-				><p>ChainId: {$walletStore.provider.provider.chainId}</p>
-				<p>NodeUrl: {$walletStore.provider.provider.nodeUrl}</p></code
+				><p>ChainId: {$walletStore.provider?.provider?.chainId ?? "Not available"}</p>
+				<p>NodeUrl: {$walletStore.provider?.provider?.nodeUrl ?? "Not available"}</p></code
 			>
 		</Card>
 	{/if}

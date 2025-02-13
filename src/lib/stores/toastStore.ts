@@ -18,33 +18,30 @@ export type ToastOptions = {
 function createToastStore() {
 	const { subscribe, update } = writable<Toast[]>([])
 	let toastId = 0
-
+	const timeouts = new Map<number, number>()
 	const remove = (id: number) => {
-		update((toasts) => toasts.filter((t) => t.id !== id))
+	  const timeout = timeouts.get(id)
+	  if (timeout) {
+		clearTimeout(timeout)
+		timeouts.delete(id)
+	  }
+	  update((toasts) => toasts.filter((t) => t.id !== id))
 	}
-
 	const add = (options: ToastOptions) => {
-		const toast: Toast = {
-			id: toastId++,
-			message: options.message,
-			type: options.type || 'success',
-			duration: options.duration || 2500
-		}
-
-		update((toasts) => [...toasts, toast])
-
-		setTimeout(() => {
-			remove(toast.id)
-		}, toast.duration)
-
-		return toast.id
+	  const toast: Toast = {
+		id: toastId++,
+		message: options.message,
+		type: options.type || 'success',
+		duration: options.duration || 2500
+	  }
+	  update((toasts) => [...toasts, toast])
+	  const timeout = setTimeout(() => {
+		remove(toast.id)
+	  }, toast.duration)
+	  timeouts.set(toast.id, timeout)
+	  return toast.id
 	}
-
-	return {
-		subscribe,
-		add,
-		remove
-	}
-}
+	return { subscribe, add, remove }
+  }
 
 export const toasts = createToastStore()

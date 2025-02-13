@@ -36,17 +36,31 @@
 		onClose()
 		toasts.add({ message: "Wallet disconnected!" })
 	}
-	const copyAddress = () => {
+	const copyAddress = async () => {
 		if (!$walletStore) return
-		navigator.clipboard.writeText($walletStore.selectedAddress)
-		toasts.add({ message: "Address copied!" })
+		try {
+			await navigator.clipboard.writeText($walletStore.selectedAddress)
+			toasts.add({ message: "Failed to copy address. Please check clipboard permissions." })
+		} catch (error) {
+			console.error("Failed to copy address:", error)
+			toasts.add({
+				message: "Failed to copy address. Please check clipboard permissions.",
+				type: "error"
+			})
+		}
 	}
 </script>
 
 {#if $walletStore}
-	<div class="modal" class:showModal>
+	<div
+		class="modal"
+		class:showModal
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="wallet-modal-title"
+	>
 		<div class="card" bind:this={element}>
-			<button class="close" onclick={onClose}>⛌</button>
+			<button class="close" onclick={onClose} aria-label="Close modal">⛌</button>
 
 			<div class="logo">
 				{#if $walletStore.icon}
@@ -103,7 +117,7 @@
 		padding: 1rem;
 		border-radius: var(--radius-lg);
 		box-shadow: 0 16px 16px rgba(0, 0, 0, 0.4);
-		width: 300px;
+		width: 320px;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;

@@ -23,23 +23,40 @@
 				clearInterval(intervalId)
 			}
 		}, interval)
+
+		return () => {
+			clearInterval(intervalId)
+		}
 	})
 </script>
 
-<div class="toast" class:success={type === "success"} class:error={type === "error"}>
+<div
+	class="toast"
+	class:success={type === "success"}
+	class:error={type === "error"}
+	role="alert"
+	aria-live="polite"
+>
 	<div class="content">
 		<span>{message}</span>
-		<button class="close-btn" onclick={onRemove} aria-label="Close">⛌</button>
+		<button class="close-btn" onclick={onRemove} aria-label="Dismiss notification">⛌</button>
 	</div>
 	<div class="progress-bar">
-		<div class="progress" style:width={`${progressWidth}%`}></div>
+		<div
+			class="progress"
+			role="progressbar"
+			aria-valuemin="0"
+			aria-valuemax="100"
+			aria-valuenow={progressWidth}
+			style:width={`${progressWidth}%`}
+		></div>
 	</div>
 </div>
 
 <style>
 	.toast {
 		position: relative;
-		min-width: 300px;
+		width: 300px;
 		margin: 0.5rem;
 		padding: 1rem;
 		border-radius: var(--radius-sm);
