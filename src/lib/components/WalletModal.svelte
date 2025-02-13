@@ -16,7 +16,6 @@
 
 	const handleClickOutside = (event: MouseEvent) => {
 		if (element && !element.contains(event.target as Node)) {
-			showModal = false
 			onClose()
 		}
 	}
@@ -34,7 +33,6 @@
 	const disconnectWallet = async () => {
 		await disconnect()
 		walletStore.clear()
-		showModal = false
 		onClose()
 		toasts.add({ message: "Wallet disconnected!" })
 	}
