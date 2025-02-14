@@ -40,7 +40,7 @@
 		if (!$walletStore) return
 		try {
 			await navigator.clipboard.writeText($walletStore.selectedAddress)
-			toasts.add({ message: "Failed to copy address. Please check clipboard permissions." })
+			toasts.add({ message: "Address copied!" })
 		} catch (error) {
 			console.error("Failed to copy address:", error)
 			toasts.add({
